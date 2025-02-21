@@ -1,0 +1,29 @@
+// คำสั่ง Prisma ที่ใช้บ่อย:
+
+// bun prisma db pull
+// ดึงข้อมูลจากฐานข้อมูลมาเป็นโครงสร้าง schema.prisma
+
+// bun prisma db push 
+// ใช้สำหรับอัพเดทโครงสร้างฐานข้อมูลให้ตรงกับ schema.prisma โดยไม่ต้องสร้าง migration
+// เหมาะสำหรับช่วง development
+
+// bun prisma migrate dev
+// สร้างไฟล์ migration และอัพเดทฐานข้อมูล
+// ใช้เมื่อต้องการเก็บประวัติการเปลี่ยนแปลงโครงสร้างฐานข้อมูล
+
+// bun prisma generate
+// สร้าง Prisma Client ใหม่หลังจากมีการเปลี่ยนแปลง schema
+// จำเป็นต้องรันทุกครั้งที่มีการแก้ไข schema.prisma
+
+// bun prisma studio
+// เปิด GUI interface สำหรับดูและแก้ไขข้อมูลในฐานข้อมูล
+// ใช้งานง่าย เหมาะสำหรับตรวจสอบข้อมูล
+
+// bun prisma format
+// จัดรูปแบบไฟล์ schema.prisma ให้สวยงาม
+// ช่วยให้โค้ดอ่านง่ายขึ้น
+
+// bun prisma migrate reset
+// รีเซ็ตฐานข้อมูลและรัน migration ใหม่ทั้งหมด
+// ระวัง: คำสั่งนี้จะลบข้อมูลทั้งหมดในฐานข้อมูล
+
