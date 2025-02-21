@@ -1,9 +1,14 @@
 'use client'
 import React, { useState } from "react";
 import { assets } from "@/assets/assets";
+import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddProduct = () => {
+
+  const { getToken } = useAppContext()
 
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
@@ -12,8 +17,45 @@ const AddProduct = () => {
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
 
+  const [isLoadingSaveBtn, setIsLoadingSaveBtn] = useState(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoadingSaveBtn(true)
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+    formData.append("offerPrice", offerPrice);
+
+    for (const file of files) {
+      formData.append("images", file);
+    }
+    try {
+      const token = await getToken()
+      const { data } = await axios.post("/api/product/add", formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      if (data.success) {
+        toast.success(data.message)
+        setName('')
+        setDescription('')
+        setCategory('Earphone')
+        setPrice('')
+        setOfferPrice('')
+        setFiles([])
+      } else {
+        toast.error(data.message)
+      }
+      setIsLoadingSaveBtn(false)
+    } catch (error) {
+      toast.error(error.message)
+      setIsLoadingSaveBtn(false)
+    }
+
 
   };
 
@@ -124,8 +166,8 @@ const AddProduct = () => {
             />
           </div>
         </div>
-        <button type="submit" className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded">
-          ADD
+        <button type="submit" className={`px-8 py-2.5 bg-orange-600 text-white font-medium rounded ${isLoadingSaveBtn ? 'opacity-50 cursor-not-allowed' : ''}`}>
+          {isLoadingSaveBtn ? 'Adding...' : 'ADD'}
         </button>
       </form>
       {/* <Footer /> */}
