@@ -1,7 +1,7 @@
+import User from "@/models/User";
+import connectDB from "@/config/db";
 import { Inngest } from "inngest";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 
 export const inngest = new Inngest({ id: "quickcart-next" });
 
@@ -19,16 +19,13 @@ export const syncUserCreation = inngest.createFunction(
             imageUrl: image_url,
         };
 
-        await prisma.users.upsert({
-            where: { id },
-            update: userData,
-            create: userData,
-        });
+        await connectDB();
+        await User.create(userData);
     }
 );
 
 
-// inngest fnc to save cart data to a database
+// inngest fnc to update user data to a database
 export const syncUserUpdation = inngest.createFunction(
     { id: "update-user-from-clerk" },
     { event: "clerk/user.updated" },
@@ -36,17 +33,14 @@ export const syncUserUpdation = inngest.createFunction(
         const { id, first_name, last_name, email_addresses, image_url } = event.data;
 
         const userData = {
-            id,
+            _id: id,
             email: email_addresses[0].email_address,
             name: `${first_name} ${last_name}`,
             imageUrl: image_url,
         };
 
-        await prisma.users.upsert({
-            where: { id },
-            update: userData,
-            create: userData,
-        });
+        await connectDB();
+        await User.findOneAndUpdate({ _id: id }, userData, { new: true });
     }
 );
 
@@ -57,6 +51,7 @@ export const syncUserDeletion = inngest.createFunction(
     { event: "clerk/user.deleted" },
     async ({ event }) => {
         const { id } = event.data;
-        await prisma.users.deleteMany({ where: { id } });
+        await connectDB();
+        await User.deleteMany({ _id: id });
     }
 );
