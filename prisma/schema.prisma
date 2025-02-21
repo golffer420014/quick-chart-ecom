@@ -8,9 +8,9 @@ datasource db {
 }
 
 model Users {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @map("_id") // เปลี่ยนจาก @db.ObjectId เป็น String ปกติ
   name      String
   email     String   @unique
   imageUrl  String
-  cartItems Json     @default("{}") // ใช้ Json type และกำหนดค่าเริ่มต้นเป็น {}
+  cartItems Json     @default("{}")
 }
