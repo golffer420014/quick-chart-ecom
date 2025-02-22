@@ -32,7 +32,7 @@ const MyOrders = () => {
                 toast.error(data.error)
             }
         } catch (error) {
-            toast.error(error.error)
+            toast.error(error.message)
         }
     }
 
